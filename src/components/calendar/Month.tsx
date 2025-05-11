@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Day from "./Day";
+import { fetchWeatherForecast, WeatherDay } from "../../utils/fetchWeather";
 
 const daysOfWeek = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
@@ -24,6 +25,12 @@ export default function Month({
   selectedDay,
   onDayClick,
 }: MonthProps) {
+  const [weather, setWeather] = useState<WeatherDay[]>([]);
+
+  useEffect(() => {
+    fetchWeatherForecast(52.23, 21.01, 16).then(setWeather).catch(() => setWeather([]));
+  }, [year, month]);
+
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
@@ -45,6 +52,13 @@ export default function Month({
     weeks.push(week);
   }
 
+  // Funkcja pomocnicza do pobrania temperatury dla danego dnia
+  function getTempMax(day: number) {
+    const date = new Date(year, month, day).toISOString().slice(0, 10);
+    const found = weather.find((w) => w.date === date);
+    return found?.tempMax ?? null;
+  }
+
   return (
     <div>
       <div className="grid grid-cols-7 gap-1 mb-2">
@@ -58,6 +72,9 @@ export default function Month({
             <Day
               key={idx}
               day={day}
+              month={month}
+              year={year}
+              weather={getTempMax(day)}
               isToday={
                 today.getFullYear() === year &&
                 today.getMonth() === month &&
