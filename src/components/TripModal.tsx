@@ -9,11 +9,21 @@ type TripModalProps = {
     date: Date;
     weather?: number;
   } | null;
+  onSave: (trip: { date: Date; city: string; country: string; cost: string; weather?: number; color: string }) => void;
 };
 
-export default function TripModal({ open, onClose, city, selectedDay }: TripModalProps) {
+export default function TripModal({ open, onClose, city, selectedDay, onSave }: TripModalProps) {
   const [cost, setCost] = useState("");
   const [country, setCountry] = useState<string>("");
+  const [color, setColor] = useState("#60a5fa"); // domyślny kolor (np. niebieski)
+
+  const colorOptions = [
+    "#60a5fa", // niebieski
+    "#f87171", // czerwony
+    "#34d399", // zielony
+    "#fbbf24", // żółty
+    "#a78bfa", // fioletowy
+  ];
 
   useEffect(() => {
     if (!city) {
@@ -24,6 +34,20 @@ export default function TripModal({ open, onClose, city, selectedDay }: TripModa
       setCountry(result || "Nieznany kraj");
     });
   }, [city]);
+
+  const handleSave = () => {
+    if (!selectedDay) return;
+    onSave({
+      date: selectedDay.date,
+      city,
+      country,
+      cost,
+      weather: selectedDay.weather,
+      color, // dodaj kolor
+    });
+    setCost("");
+    setColor("#60a5fa");
+  };
 
   if (!open || !selectedDay) return null;
 
@@ -52,8 +76,29 @@ export default function TripModal({ open, onClose, city, selectedDay }: TripModa
             placeholder="Podaj koszt"
           />
         </div>
+        <div className="mb-2">
+          Kolor wycieczki:
+          <div className="flex gap-2 mt-1">
+            {colorOptions.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={`w-6 h-6 rounded-full border-2 ${color === c ? "border-black" : "border-gray-300"}`}
+                style={{ backgroundColor: c }}
+                onClick={() => setColor(c)}
+              />
+            ))}
+          </div>
+        </div>
         <div className="flex gap-2 mt-4">
           <button className="bg-indigo-600 text-white px-4 py-1 rounded" onClick={onClose}>Zamknij</button>
+          <button
+            className="bg-green-600 text-white px-4 py-1 rounded"
+            onClick={handleSave}
+            disabled={!cost}
+          >
+            Zapisz
+          </button>
         </div>
       </div>
     </div>

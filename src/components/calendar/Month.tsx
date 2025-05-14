@@ -6,6 +6,15 @@ import { fetchWeatherByCity, WeatherDay } from "../../utils/fetchWeather";
 
 const daysOfWeek = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
+interface Trip {
+  date: Date;
+  city: string;
+  country: string;
+  cost: string;
+  weather?: number;
+  color: string;
+}
+
 interface MonthProps {
   year: number;
   month: number;
@@ -13,6 +22,7 @@ interface MonthProps {
   today?: Date;
   selectedDay?: number;
   onDayClick: (date: Date, weather?: number) => void;
+  trips: Trip[];
 }
 
 function getMondayStartIndex(jsDay: number) {
@@ -26,6 +36,7 @@ export default function Month({
   today = new Date(),
   selectedDay,
   onDayClick,
+  trips,
 }: MonthProps) {
   const [weather, setWeather] = useState<WeatherDay[]>([]);
 
@@ -60,6 +71,15 @@ export default function Month({
     return found?.tempMax ?? null;
   }
 
+  function getTripForDay(day: number) {
+    return trips.find(
+      (trip) =>
+        new Date(trip.date).getFullYear() === year &&
+        new Date(trip.date).getMonth() === month &&
+        new Date(trip.date).getDate() === day
+    );
+  }
+
   return (
     <div>
       <div className="grid grid-cols-7 gap-1 mb-2">
@@ -83,6 +103,8 @@ export default function Month({
               }
               isSelected={selectedDay === day}
               onClick={onDayClick}
+              tripColor={getTripForDay(day)?.color}
+              isBlocked={!!getTripForDay(day)}
             />
           ) : (<div key={idx} />)
         )}
