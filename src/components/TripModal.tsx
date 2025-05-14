@@ -43,7 +43,7 @@ export default function TripModal({ open, onClose, city, selectedDay, onSave }: 
       country,
       cost,
       weather: selectedDay.weather,
-      color, // dodaj kolor
+      color,
     });
     setCost("");
     setColor("#60a5fa");

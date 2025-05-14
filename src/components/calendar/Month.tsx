@@ -3,17 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Day from "./Day";
 import { fetchWeatherByCity, WeatherDay } from "../../utils/fetchWeather";
+import { Trip } from "../TripList";
 
 const daysOfWeek = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
-
-interface Trip {
-  date: Date;
-  city: string;
-  country: string;
-  cost: string;
-  weather?: number;
-  color: string;
-}
 
 interface MonthProps {
   year: number;
