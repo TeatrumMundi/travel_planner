@@ -7,7 +7,7 @@ interface DayProps {
   year?: number;
   isToday?: boolean;
   isSelected?: boolean;
-  onClick?: () => void;
+  onClick: (date: Date, weather?: number) => void;
   weather?: number | null;
 }
 
@@ -33,7 +33,16 @@ export default function Day({
         ${isSelected ? "bg-indigo-600 text-white" : ""}
         ${isPast ? "opacity-40 cursor-not-allowed" : "hover:bg-indigo-200 transition"}
       `}
-      onClick={isPast ? undefined : onClick}
+      onClick={
+        isPast
+          ? undefined
+          : () => {
+              if (year !== undefined && month !== undefined) {
+                const date = new Date(year, month, day);
+                onClick(date, weather ?? undefined);
+              }
+            }
+      }
       disabled={isPast}
     >
       <span>{day}</span>

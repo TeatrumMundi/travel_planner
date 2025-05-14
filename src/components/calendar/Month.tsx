@@ -2,16 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import Day from "./Day";
-import { fetchWeatherForecast, WeatherDay } from "../../utils/fetchWeather";
+import { fetchWeatherByCity, WeatherDay } from "../../utils/fetchWeather";
 
 const daysOfWeek = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
 interface MonthProps {
   year: number;
   month: number;
+  city: string;
   today?: Date;
   selectedDay?: number;
-  onDayClick?: (day: number) => void;
+  onDayClick: (date: Date, weather?: number) => void;
 }
 
 function getMondayStartIndex(jsDay: number) {
@@ -21,6 +22,7 @@ function getMondayStartIndex(jsDay: number) {
 export default function Month({
   year,
   month,
+  city,
   today = new Date(),
   selectedDay,
   onDayClick,
@@ -28,8 +30,8 @@ export default function Month({
   const [weather, setWeather] = useState<WeatherDay[]>([]);
 
   useEffect(() => {
-    fetchWeatherForecast(52.23, 21.01, 16).then(setWeather).catch(() => setWeather([]));
-  }, [year, month]);
+    fetchWeatherByCity(city, 16).then(setWeather).catch(() => setWeather([]));
+  }, [year, month, city]);
 
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -52,7 +54,6 @@ export default function Month({
     weeks.push(week);
   }
 
-  // Funkcja pomocnicza do pobrania temperatury dla danego dnia
   function getTempMax(day: number) {
     const date = new Date(year, month, day).toISOString().slice(0, 10);
     const found = weather.find((w) => w.date === date);
@@ -81,7 +82,7 @@ export default function Month({
                 today.getDate() === day
               }
               isSelected={selectedDay === day}
-              onClick={() => onDayClick?.(day)}
+              onClick={onDayClick}
             />
           ) : (<div key={idx} />)
         )}

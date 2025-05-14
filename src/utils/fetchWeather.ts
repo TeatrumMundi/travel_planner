@@ -3,6 +3,20 @@ export interface WeatherDay {
   tempMax: number | null;
 }
 
+export async function fetchCityCoords(city: string): Promise<{ latitude: number; longitude: number } | null> {
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pl&format=json`;
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (data.results && data.results.length > 0) {
+    return {
+      latitude: data.results[0].latitude,
+      longitude: data.results[0].longitude,
+    };
+  }
+  return null;
+}
+
 export async function fetchWeatherForecast(
   latitude: number,
   longitude: number,
@@ -20,4 +34,14 @@ export async function fetchWeatherForecast(
       ? data.daily.temperature_2m_max[idx]
       : null,
   }));
+}
+
+// Funkcja pobierająca pogodę po nazwie miasta
+export async function fetchWeatherByCity(
+  city: string,
+  days: number = 16
+): Promise<WeatherDay[]> {
+  const coords = await fetchCityCoords(city);
+  if (!coords) throw new Error("Nie znaleziono miasta");
+  return fetchWeatherForecast(coords.latitude, coords.longitude, days);
 }
