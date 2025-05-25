@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Travel Planner
+
+A simple calendar-based travel planner built with Next.js and React.  
+Plan your trips, see weather forecasts, and save your journeys with color-coded days!
+
+---
+
+## Features
+
+- **Yearly calendar** view with clickable days
+- **Add trips** with city, country (auto-fetched), cost, weather, and color
+- **Weather forecast** for selected city (up to 16 days ahead)
+- **Color-coded trips**: pick a color for each trip, see it in the calendar and trip list
+- **Block days** with active trips (cannot add another trip for the same day)
+- **Trips saved in browser** (localStorage) – your plans stay after refresh
+- **Delete trips** easily from the list
+- **Responsive** and mobile-friendly
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/travel_planner.git
+cd travel_planner
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3. Set up environment variables
+
+Create a `.env` file in the root directory and add your [OpenWeatherMap API key](https://openweathermap.org/api):
+
+```
+NEXT_PUBLIC_OPENWEATHER_API_KEY="your_openweather_api_key"
+```
+
+### 4. Run the development server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+src/
+  app/
+    page.tsx         # Main page
+    layout.tsx       # App layout
+    globals.css      # Global styles
+  components/
+    calendar/
+      Year.tsx
+      Month.tsx
+      Day.tsx
+    TripModal.tsx    # Modal for adding trips
+    TripList.tsx     # List of saved trips
+    Footer.tsx
+  utils/
+    fetchCountry.ts  # Fetch country by city
+    fetchWeather.ts  # Fetch weather forecast
+    isPastDate.ts    # Utility for past date check
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Customization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Colors:** You can easily change available trip colors in `TripModal.tsx`.
+- **Weather:** Weather is fetched for the selected city using Open-Meteo and OpenWeatherMap APIs.
+- **Persistence:** All trips are saved in your browser's localStorage.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
+
+---
+
+## Author
+
+[Teatrum Mundi](https://github.com/TeatrumMundi)
