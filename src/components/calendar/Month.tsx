@@ -11,7 +11,6 @@ interface MonthProps {
   year: number;
   month: number;
   city: string;
-  today?: Date;
   selectedDay?: number;
   onDayClick: (date: Date, weather?: number) => void;
   trips: Trip[];
@@ -25,12 +24,20 @@ export default function Month({
   year,
   month,
   city,
-  today = new Date(),
   selectedDay,
   onDayClick,
   trips,
 }: MonthProps) {
   const [weather, setWeather] = useState<WeatherDay[]>([]);
+  const [today, setToday] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setToday(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     fetchWeatherByCity(city, 16).then(setWeather).catch(() => setWeather([]));
